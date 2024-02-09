@@ -45,15 +45,13 @@ class Place(BaseModel, Base):
     city = relationship('City', back_populates='places')
     user = relationship('User', back_populates='places')
 
-    @property
-    def amenities(self):
-        if os.environ.get('HBNB_TYPE_STORAGE') == 'db':
-            _amenities = relationship(
-                'Amenity', secondary=place_amenity,
-                backref='place_amenities',
-                viewonly=False)
-            return _amenities
-        else:
+    if os.environ.get('HBNB_TYPE_STORAGE') == 'db':
+        amenities = relationship(
+            'Amenity', secondary=place_amenity,
+            viewonly=False, back_populates='place_amenities')
+    else:
+        @property
+        def amenities(self):
             from models.amenity import Amenity
             all_amenities = models.storage.all(Amenity)
             filtered = []
@@ -62,13 +60,13 @@ class Place(BaseModel, Base):
                     filtered.append(amenity)
             return filtered
 
-    @amenities.setter
-    def amenities(self, amenity):
-        """Adds an amenity id
-        """
-        from models.amenity import Amenity
-        if isinstance(amenity, Amenity):
-            self.amenity_ids.append(amenity.id)
+        @amenities.setter
+        def amenities(self, amenity):
+            """Adds an amenity id
+            """
+            from models.amenity import Amenity
+            if isinstance(amenity, Amenity):
+                self.amenity_ids.append(amenity.id)
 
     @property
     def reviews(self):
