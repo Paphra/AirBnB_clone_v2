@@ -30,6 +30,7 @@ class test_fileStorage(unittest.TestCase):
     def test_new(self):
         """ New object is correctly added to __objects """
         new = BaseModel()
+        new.save()
         for obj in storage.all().values():
             temp = obj
         self.assertTrue(temp is obj)
@@ -62,7 +63,7 @@ class test_fileStorage(unittest.TestCase):
     def test_reload(self):
         """ Storage file is successfully loaded to __objects """
         new = BaseModel()
-        storage.save()
+        new.save()
         storage.reload()
         for obj in storage.all().values():
             loaded = obj
@@ -97,6 +98,7 @@ class test_fileStorage(unittest.TestCase):
         """ Key is properly formatted """
         new = BaseModel()
         _id = new.to_dict()['id']
+        new.save()
         for key in storage.all().keys():
             temp = key
         self.assertEqual(temp, 'BaseModel' + '.' + _id)
@@ -111,9 +113,12 @@ class test_fileStorage(unittest.TestCase):
         """test_all_with_cls method
         Tests the all method with the optional cls argument
         """
-        state1 = State()
-        state2 = State()
-        base = BaseModel()
+        state1 = State('Some State')
+        state1.save()
+        state2 = State('Another State')
+        state2.save()
+        base = BaseModel('Base Model')
+        base.save()
         all_objs = storage.all()
         state_objs = storage.all(State)
 
@@ -125,9 +130,12 @@ class test_fileStorage(unittest.TestCase):
         Tests all the features of calling delete method of storage
         """
 
-        state1 = State()
-        state2 = State()
-        base = BaseModel()
+        state1 = State('Some State')
+        state1.save()
+        state2 = State('Another State')
+        state2.save()
+        base = BaseModel('Some Base')
+        base.save()
 
         storage.delete()
         all_objs = storage.all()

@@ -22,11 +22,9 @@ class City(BaseModel, Base):
 
     @property
     def state(self):
-        """state property
-        The State in which the City belongs
-        """
         if os.environ.get('HBNB_TYPE_STORAGE') == 'db':
-            return relationship('State', back_populates='cities')
+            _state = relationship('State', back_populates='cities')
+            return _state
         else:
             from models import storage
             from models.state import State

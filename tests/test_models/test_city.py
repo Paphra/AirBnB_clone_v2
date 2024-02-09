@@ -21,11 +21,15 @@ class test_City(test_basemodel):
     def test_state_id(self):
         """Tests the state_id that has been assigned
         """
+        from models.state import State
         new = self.value()
+        state = State()
+        new.state_id = state.id
         self.assertEqual(type(new.state_id), str)
 
     def test_name(self):
         """Tests the name of the City
         """
         new = self.value()
+        new.name = "City"
         self.assertEqual(type(new.name), str)

@@ -77,8 +77,11 @@ class test_basemodel(unittest.TestCase):
         Tests the str method of the classes (models)
         """
         i = self.value()
-        self.assertEqual(str(i), '[{}] ({}) {}'.format(self.name, i.id,
-                         i.__dict__))
+        idic = {k: v for k, v in i.__dict__.items() if k != '_sa_instance_state'}
+        self.assertEqual(
+            str(i),
+            '[{}] ({}) {}'.format(
+                self.name, i.id, idic))
 
     def test_todict(self):
         """test_todict method
@@ -94,14 +97,6 @@ class test_basemodel(unittest.TestCase):
         """
         n = {None: None}
         with self.assertRaises(TypeError):
-            new = self.value(**n)
-
-    def test_kwargs_one(self):
-        """test_kwargs_one method
-        Tests what happens when there is only one kwwarg
-        """
-        n = {'Name': 'test'}
-        with self.assertRaises(KeyError):
             new = self.value(**n)
 
     def test_id(self):

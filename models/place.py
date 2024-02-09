@@ -47,23 +47,20 @@ class Place(BaseModel, Base):
 
     @property
     def amenities(self):
-        """Returns the amenities
-        """
         if os.environ.get('HBNB_TYPE_STORAGE') == 'db':
-            return relationship(
-                'Amenity',
-                secondary=place_amenity,
+            _amenities = relationship(
+                'Amenity', secondary=place_amenity,
                 backref='place_amenities',
-                viewonly=False
-            )
-        from models.amenity import Amenity
-        all_amenities = models.storage.all(Amenity)
-        filtered = []
-        for amenity in all_amenities:
-            if amenity.id in self.amenity_ids:
-                filtered.append(amenity)
-
-        return filtered
+                viewonly=False)
+            return _amenities
+        else:
+            from models.amenity import Amenity
+            all_amenities = models.storage.all(Amenity)
+            filtered = []
+            for amenity in all_amenities:
+                if amenity.id in self.amenity_ids:
+                    filtered.append(amenity)
+            return filtered
 
     @amenities.setter
     def amenities(self, amenity):
