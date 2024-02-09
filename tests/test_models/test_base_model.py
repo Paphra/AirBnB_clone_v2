@@ -77,7 +77,9 @@ class test_basemodel(unittest.TestCase):
         Tests the str method of the classes (models)
         """
         i = self.value()
-        idic = {k: v for k, v in i.__dict__.items() if k != '_sa_instance_state'}
+        idic = {
+            k: v for k, v in i.__dict__.items() if k != '_sa_instance_state'
+        }
         self.assertEqual(
             str(i),
             '[{}] ({}) {}'.format(
