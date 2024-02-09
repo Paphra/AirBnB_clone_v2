@@ -20,12 +20,11 @@ class City(BaseModel, Base):
         cascade='all, delete-orphan'
     )
 
-    @property
-    def state(self):
-        if os.environ.get('HBNB_TYPE_STORAGE') == 'db':
-            _state = relationship('State', back_populates='cities')
-            return _state
-        else:
+    if os.environ.get('HBNB_TYPE_STORAGE') == 'db':
+        state = relationship('State', back_populates='cities')
+    else:
+        @property
+        def state(self):
             from models import storage
             from models.state import State
             all_states = storage.all(State)
